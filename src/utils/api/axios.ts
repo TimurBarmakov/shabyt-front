@@ -82,46 +82,40 @@ axiosConfig.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
 
-        originalRequest._retry = true;
-        
-        try {
-          const refreshToken = getRefreshTokenCookie();
-              if (!refreshToken) {
-                  console.error('No refresh token found');
-                  return Promise.reject(error);
-              }
-  
-              const response = await axios.post('/rest/v1/user/refresh-token', { refresh_token: refreshToken });
-              const newToken = response.data.access_token;
-              const newRefreshToken = response.data.refresh_token;
-              setTokenCookie(newToken);
-              setRefreshTokenCookie(newRefreshToken)
-              processQueue(null, newToken);
-              
-              originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
-              return axios(originalRequest);
-          } catch (refreshError) {
-              processQueue(refreshError, null);
-              removeTokenCookie();
-              return Promise.reject(refreshError);
-          }
-          return axiosConfig(originalRequest);
-      } else {
-      return Promise.reject(error);
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        // const refreshToken = getRefreshTokenCookie();
+        // if (!refreshToken) {
+          console.error("No refresh token found");
+          // removeTokenCookie();
+          window.location.href = "/auth"; 
+          return Promise.reject(error);
+        // }
+
+        const response = await axios.post("/rest/v1/user/refresh-token", {
+          refresh_token: refreshToken,
+        });
+
+        const newToken = response.data.access_token;
+        const newRefreshToken = response.data.refresh_token;
+
+        setTokenCookie(newToken);
+        setRefreshTokenCookie(newRefreshToken);
+        processQueue(null, newToken);
+
+        originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+        return axios(originalRequest);
+      } catch (refreshError) {
+        processQueue(refreshError, null);
+        removeTokenCookie();
+        window.location.href = "/auth"; 
+        return Promise.reject(refreshError);
+      }
     }
 
-      return new Promise((resolve, reject) => {
-        failedQueue.push({
-          resolve: (token: string) => {
-            originalRequest.headers['Authorization'] = `Bearer ${token}`;
-            resolve(axios(originalRequest)); 
-          },
-          reject: (err: any) => reject(err),
-        });
-      });
-    
     return Promise.reject(error);
   }
 );
