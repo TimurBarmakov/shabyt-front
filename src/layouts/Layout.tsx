@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Layout as AntLayout, Menu, Typography, Button, Row, Col, Image, Divider} from "antd";
+import { Layout as AntLayout, Menu, Typography, Button, Row, Col, Image, Divider, Grid} from "antd";
 import { Link, Outlet } from "react-router-dom";
 import styled from "styled-components";
 import Logo from "../assets/icons/main-logo.svg";
@@ -69,7 +69,8 @@ export const OrangeButton = styled(Button)`
 export default function Layout() {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
-
+const { useBreakpoint } = Grid;
+const screens = useBreakpoint();
   return (
     
     <Row style={{background: 'rgba(245, 245, 245, 1)', minHeight: '100vh'}}>
@@ -199,7 +200,7 @@ align="middle"
         style={{ padding: 24, transition: "all 0.3s ease" }}
       >
           <AntLayout style={{ minHeight: "100%" }}>
-             <Header style={{ textAlign: "center", height: 110, background: 'transparent', marginTop: 40 }}>
+             <Header style={{ textAlign: "center", height: 110, background: 'transparent', marginTop: 40, padding: screens.xxl ? '0 50px' : '0 20px' }}>
               <Row justify="space-between">
                 <Col span={8}>
                   {/* <Row
@@ -262,7 +263,7 @@ align="middle"
               </Row>
               
             </Header>
-            <Content style={{ margin: "28px 50px", flex: 1 }}>
+            <Content style={{ margin: screens.xxl ? "28px 50px" : '28px 20px', flex: 1 }}>
               <Outlet />
             </Content>
             <Footer style={{ textAlign: "center" }}>

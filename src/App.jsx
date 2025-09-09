@@ -8,6 +8,8 @@ import About from "./pages/About";
 import LoginPage from "./pages/LoginPage";
 import CompanyRegister from "./pages/CompanyRegister";
 import CompaniesList from "./pages/CompaniesList";
+import RegisterProjectPage from "./pages/RegisterProject";
+import RegisterPage from "./pages/Register";
 
 
 
@@ -26,6 +28,9 @@ export default function App() {
       {/* Публичные страницы */}
       <Route element={<PublicLayout />}>
         <Route path="/auth" element={<LoginPage />} />
+        <Route path="/register-project" element={<RegisterProjectPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        
       </Route>
     </Routes>
   );

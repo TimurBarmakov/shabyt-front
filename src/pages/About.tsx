@@ -132,15 +132,17 @@ const handleSend = async () => {
     }
   };
 
-    const handleCopy = async () => {
-    if (link) {
-      try {
-        await navigator.clipboard.writeText(link);
-        message.success("Ссылка скопирована в буфер обмена!");
-      } catch (err) {
-        message.error("Не удалось скопировать ссылку");
-      }
-    }
+  const handleCopy = () => {
+    if (!link) return;
+
+    const textArea = document.createElement("textarea");
+    textArea.value = link;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textArea);
+
+    message.success("Ссылка скопирована в буфер обмена!");
   };
 
 
